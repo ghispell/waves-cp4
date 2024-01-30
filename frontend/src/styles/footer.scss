@@ -1,0 +1,15 @@
+$first-color: #8bc1f3;
+$second-color: #031926;
+
+.footer {
+  background-color: $first-color;
+  color: white;
+  padding-block: 10px;
+  position: fixed;
+  width: 100%;
+  bottom: 0px;
+  p {
+    margin: 0px;
+    text-align: center;
+  }
+}
