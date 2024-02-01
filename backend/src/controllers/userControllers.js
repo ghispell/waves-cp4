@@ -1,5 +1,6 @@
 // Import access to database tables
 const tables = require("../tables");
+const jwt = require("jsonwebtoken");
 
 // The B of BREAD - Browse (Read All) operation
 const browse = async (req, res, next) => {
@@ -54,6 +55,36 @@ const add = async (req, res, next) => {
   }
 };
 
+const registrationSession = async (req, res, next) => {
+  const userId = req.params.id;
+  const sessionId = req.body.sessionId;
+  try {
+    const insertId = await tables.user.registerSession(sessionId, userId);
+    res.status(201).json({ insertId });
+  } catch (err) {
+    next(err);
+  }
+};
+
+const login = async (req, res, next) => {
+  try {
+    const user = req.user;
+    const tokensurf = jwt.sign({ user }, process.env.APP_SECRET);
+    res.cookie("token", tokensurf, { httpOnly: true });
+    res.json({ user });
+  } catch (err) {
+    next(err);
+  }
+};
+
+const logout = async (req, res, next) => {
+  try {
+    res.clearCookie("token");
+    res.sendStatus(200);
+  } catch (err) {
+    next(err);
+  }
+};
 // The D of BREAD - Destroy (Delete) operation
 // This operation is not yet implemented
 
@@ -61,7 +92,8 @@ const add = async (req, res, next) => {
 module.exports = {
   browse,
   read,
-  // edit,
   add,
-  // destroy,
+  registrationSession,
+  login,
+  logout,
 };

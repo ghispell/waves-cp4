@@ -1,26 +1,19 @@
 const AbstractManager = require("./AbstractManager");
 
-class UserManager extends AbstractManager {
+class ItemManager extends AbstractManager {
   constructor() {
     // Call the constructor of the parent class (AbstractManager)
     // and pass the table name "item" as configuration
-    super({ table: "user" });
+    super({ table: "session" });
   }
 
   // The C of CRUD - Create operation
 
-  async create(user) {
+  async create(session, userId) {
     // Execute the SQL INSERT query to add a new item to the "item" table
     const [result] = await this.database.query(
-      `insert into ${this.table} (firstname, lastname, email, password, level, admin) values (?, ?, ?, ?, ?, ?)`,
-      [
-        user.firstname,
-        user.lastname,
-        user.email,
-        user.password,
-        user.level,
-        user.admin,
-      ]
+      `insert into ${this.table} (title, date, time, location, surf_level, userId) values (?, ?, ?, ?, ?, ?)`,
+      [session.title, session.date, session.time, session.location, session.surf_level, userId]
     );
 
     // Return the ID of the newly inserted item
@@ -40,13 +33,6 @@ class UserManager extends AbstractManager {
     return rows[0];
   }
 
-  async checkEmail(email) {
-    const [rows] = await this.database.query(
-      `select * from ${this.table} where email = ?`,
-      [email]
-    );
-    return rows[0];
-  }
   async readAll() {
     // Execute the SQL SELECT query to retrieve all items from the "item" table
     const [rows] = await this.database.query(`select * from ${this.table}`);
@@ -55,20 +41,18 @@ class UserManager extends AbstractManager {
     return rows;
   }
 
-  async registerSession(sessionId, id) {
-    const [result] = await this.database.query(
-      `insert into session_participation (user_id, session_id) values (?, ?)`,
-      [id, sessionId]
-    );
-    return result.insertId;
-  }
-
   // The U of CRUD - Update operation
   // TODO: Implement the update operation to modify an existing item
 
-  // async update(item) {
-  //   ...
-  // }
+  async update(session) {
+    const [result] = await this.database.query(
+      `update ${this.table} set title = ?, date = ?, time = ?, location = ?, surf_level = ? where id = ?`,
+      [session.title, session.date, session.time, session.location, session.surf_level, session.id]
+    );
+
+
+    return result.changedRows;
+  }
 
   // The D of CRUD - Delete operation
   // TODO: Implement the delete operation to remove an item by its ID
@@ -78,4 +62,4 @@ class UserManager extends AbstractManager {
   // }
 }
 
-module.exports = UserManager;
+module.exports = ItemManager;
