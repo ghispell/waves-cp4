@@ -37,19 +37,23 @@ function Navbar({ onMenuClick }) {
       </h1>
       <div className="flex justify-center items-center">
         {user ? (
-          <h2>
-            <button type="button" onClick={handleLogout}>
-              <p>Logout</p>
-            </button>
-          </h2>
+          <div className="flex justify-center items-center">
+            <h2>{user.firstname}</h2>
+            <Link to="/">
+              <img src={profile} alt="profile" className="profile" />
+            </Link>
+          </div>
         ) : (
-          <h2>
-            <Link to="/login">Login</Link>
-          </h2>
+          <div className="flex">
+            <h2>
+              <Link to="/login">Login</Link>
+            </h2>
+            <Link to="/login">
+              {" "}
+              <img src={profile} alt="profile" className="profile" />
+            </Link>
+          </div>
         )}
-        <Link to="/profile">
-          <img src={profile} alt="profile" className="profile" />
-        </Link>
       </div>
     </div>
   );

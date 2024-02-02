@@ -12,6 +12,9 @@ $second-color: #031926;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   padding-inline: 1rem 1rem;
+  position: fixed;
+  width: 100%;
+  top: 0;
   h1 {
     color: white;
     font-family: "Just Another Hand", cursive;

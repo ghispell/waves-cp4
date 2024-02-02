@@ -1,26 +1,19 @@
 const AbstractManager = require("./AbstractManager");
 
-class SessionManager extends AbstractManager {
+class SessionParticipationManager extends AbstractManager {
   constructor() {
     // Call the constructor of the parent class (AbstractManager)
     // and pass the table name "item" as configuration
-    super({ table: "session" });
+    super({ table: "session_participation" });
   }
 
   // The C of CRUD - Create operation
 
-  async create(session, userId) {
+  async create(item) {
     // Execute the SQL INSERT query to add a new item to the "item" table
     const [result] = await this.database.query(
-      `insert into ${this.table} (title, date, time, location, surf_level, userId) values (?, ?, ?, ?, ?, ?)`,
-      [
-        session.title,
-        session.date,
-        session.time,
-        session.location,
-        session.surf_level,
-        userId,
-      ]
+      `insert into ${this.table} (title) values (?)`,
+      [item.title]
     );
 
     // Return the ID of the newly inserted item
@@ -48,26 +41,28 @@ class SessionManager extends AbstractManager {
     return rows;
   }
 
+  async registerSession(sessionId, id) {
+    const [result] = await this.database.query(
+      `insert into ${this.table} (user_id, session_id) values (?, ?)`,
+      [id, sessionId]
+    );
+    return result.insertId;
+  }
+
+  async checkId(userId) {
+    const [rows] = await this.database.query(
+      `select * from ${this.table} where user_id=?`,
+      [userId]
+    );
+    return rows;
+  }
   // The U of CRUD - Update operation
   // TODO: Implement the update operation to modify an existing item
 
-  async update(session) {
-    const [result] = await this.database.query(
-      `update ${this.table} set title = ?, date = ?, time = ?, location = ?, surf_level = ? where id = ?`,
-      [
-        session.title,
-        session.date,
-        session.time,
-        session.location,
-        session.surf_level,
-        session.id,
-      ]
-    );
+  // async update(item) {
+  //   ...
+  // }
 
-    return result.changedRows;
-  }
-
-  
   // The D of CRUD - Delete operation
   // TODO: Implement the delete operation to remove an item by its ID
 
@@ -76,4 +71,4 @@ class SessionManager extends AbstractManager {
   // }
 }
 
-module.exports = SessionManager;
+module.exports = SessionParticipationManager;

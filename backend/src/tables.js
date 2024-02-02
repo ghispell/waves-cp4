@@ -6,11 +6,13 @@
 const ItemManager = require("./models/ItemManager");
 const UserManager = require("./models/UserManager");
 const SessionManager = require("./models/SessionManager");
+const SessionParticipationManager = require("./models/SessionParticipationManager");
 
 const managers = [
   ItemManager,
   UserManager,
   SessionManager,
+  SessionParticipationManager,
   // Add other managers here
 ];
 

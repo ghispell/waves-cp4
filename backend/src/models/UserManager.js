@@ -55,14 +55,14 @@ class UserManager extends AbstractManager {
     return rows;
   }
 
-  async registerSession(sessionId, id) {
-    const [result] = await this.database.query(
-      `insert into session_participation (user_id, session_id) values (?, ?)`,
-      [id, sessionId]
+  async readSessionById(sessionId) {
+    const [rows] = await this.database.query(
+      `select u.firstname, u.lastname from ${this.table} u join session_participation sp on u.id = sp.user_id where sp.session_id = ?`,
+      [sessionId]
     );
-    return result.insertId;
-  }
 
+    return rows;
+  }
   // The U of CRUD - Update operation
   // TODO: Implement the update operation to modify an existing item
 

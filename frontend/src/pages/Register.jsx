@@ -2,15 +2,17 @@ import "../styles/register.scss";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import { success, failed } from "../services/toast";
+import { useState } from "react";
+import { Navigate } from "react-router-dom";
 
 function Register() {
+  const [registered, setRegistered] = useState(false);
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
   const onSubmit = async (user) => {
-    console.log(user);
     try {
       const response = await axios.post(
         `${import.meta.env.VITE_BACKEND_URL}/api/users`,
@@ -18,11 +20,16 @@ function Register() {
       );
       if (response.status === 201) {
         success("User created successfully");
+        setRegistered(!registered);
       }
     } catch (error) {
       failed("User creation failed");
     }
   };
+
+  if (registered) {
+    return <Navigate to="/" replace />;
+  }
 
   return (
     <div className="form-container">

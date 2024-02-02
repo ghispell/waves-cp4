@@ -17,7 +17,7 @@ const userControllers = require("./controllers/userControllers");
 const { hashPassword, verifyPassword } = require("./services/hashPassword");
 
 router.get("/users", userControllers.browse);
-router.post("/users/session/:id", userControllers.registrationSession);
+router.get("/users/sessions/:id", userControllers.readSession);
 router.get("/users/:id", userControllers.read);
 router.post("/users", hashPassword, userControllers.add);
 router.post("/login", verifyPassword, userControllers.login);
@@ -30,6 +30,13 @@ router.get("/sessions", sessionControllers.browse);
 router.get("/sessions/:id", sessionControllers.read);
 router.put("/sessions", sessionControllers.edit);
 
+const sessionParticipationControllers = require("./controllers/sessionParticipationControllers");
+
+router.get("/sessionsparticipation/", sessionParticipationControllers.browse);
+router.post(
+  "/sessionsparticipation/:id",
+  sessionParticipationControllers.registrationSession
+);
 /* ************************************************************************* */
 
 module.exports = router;

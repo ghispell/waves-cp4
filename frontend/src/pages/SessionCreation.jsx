@@ -1,11 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import { useUser } from "../contexts/UserContext";
 import { success, failed } from "../services/toast";
+import { Navigate } from "react-router-dom";
 
 function SessionCreation() {
   const { user, setUser } = useUser();
+  const [redirect, setRedirect] = useState(false);
   const {
     register,
     handleSubmit,
@@ -13,17 +15,32 @@ function SessionCreation() {
   } = useForm();
   const onSubmit = async (session) => {
     try {
-      const response = await axios.post(
+      const response1 = await axios.post(
         `${import.meta.env.VITE_BACKEND_URL}/api/sessions/${user.id}`,
         session
       );
-      if (response.status === 201) {
-        success("Session created successfully");
+
+      if (response1.status === 201) {
+        const response2 = await axios.post(
+          `${import.meta.env.VITE_BACKEND_URL}/api/sessionsparticipation/${
+            user.id
+          }`,
+          { sessionId: response1.data.insertId }
+        );
+
+        if (response2.status === 201) {
+          success("The session has been created successfully");
+          setRedirect(true);
+        }
       }
     } catch (error) {
       failed(error);
     }
   };
+
+  if (redirect) {
+    return <Navigate to="/sessions" />;
+  }
 
   return (
     <div className="form-container">

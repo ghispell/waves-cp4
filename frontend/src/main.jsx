@@ -13,7 +13,7 @@ import Register from "./pages/Register";
 import Login from "./pages/Login";
 import SessionCreation from "./pages/SessionCreation";
 import SessionsList from "./pages/SessionsList";
-import SessionTest from "./pages/SessionsTest";
+import Session from "./pages/Session";
 
 const router = createBrowserRouter([
   {

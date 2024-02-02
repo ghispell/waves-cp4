@@ -1,3 +1,8 @@
+import { Navigate, Link } from "react-router-dom";
+import { useUser } from "../contexts/UserContext";
+import { success, failed } from "../services/toast";
+import axios from "axios";
+
 import("../styles/sidemenu.scss");
 import surf from "../assets/sidemenu/surf.png";
 import calendar from "../assets/sidemenu/calendar.png";
@@ -9,6 +14,25 @@ import profile from "../assets/sidemenu/profile.png";
 import cross from "../assets/sidemenu/cross.png";
 
 function SideMenu({ onClose }) {
+  const { user, setUser } = useUser();
+
+  const handleLogout = async (event) => {
+    event.preventDefault();
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_BACKEND_URL}/api/logout`,
+        { withCredentials: true, credentials: "include" }
+      );
+      if (response.status === 200) {
+        success("You are logged out!");
+        window.localStorage.removeItem("surfer");
+        setUser(false);
+        <Navigate to="/" replace />;
+      }
+    } catch (error) {
+      failed(error.message);
+    }
+  };
   return (
     <div className="flex w-full">
       <div className="sideMenu absolute w-3/4 h-full z-20 bg-second">
@@ -28,7 +52,9 @@ function SideMenu({ onClose }) {
           </div>
           <div className="surfList ml-4 flex gap-1">
             <img src={calendar} alt="calendar" className="w-5" />
-            <p className="text-sm">SESSION</p>
+            <p className="text-sm">
+              <Link to="/sessions">SESSION</Link>
+            </p>
           </div>
         </div>
         <div className="bg-first h-px my-4" />
@@ -53,10 +79,18 @@ function SideMenu({ onClose }) {
               <img src={profile} alt="profile" className="w-6" />
               <p className="text-sm">PROFILE</p>
             </div>
-            <div className="flex gap-1">
-              <img src={disconnect} alt="disconnect" className="w-6" />
-              <p className="text-sm">DISCONNECT</p>
-            </div>
+            {user && (
+              <div className="flex gap-1">
+                <img src={disconnect} alt="disconnect" className="w-6" />
+                <button
+                  type="button"
+                  className="text-sm"
+                  onClick={handleLogout}
+                >
+                  DISCONNECT
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </div>

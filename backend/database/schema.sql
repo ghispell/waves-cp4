@@ -20,9 +20,12 @@ CREATE TABLE `session` (
 );
 
 CREATE TABLE `session_participation` (
+  `id` INT NOT NULL AUTO_INCREMENT, 
   `user_id` INT NOT NULL,
   `session_id` INT NOT NULL,
-  PRIMARY KEY (`user_id`, `session_id`),
-  FOREIGN KEY (`user_id`) REFERENCES `user`(`id`),
-  FOREIGN KEY (`session_id`) REFERENCES `session`(`id`)
+  PRIMARY KEY (`id`),
+  KEY `fk_session_participation_user` (`user_id`),
+  KEY `fk_session_participation_session` (`session_id`),
+  CONSTRAINT `fk_session_participation_user` FOREIGN KEY (`user_id`) REFERENCES `user`(`id`),
+  CONSTRAINT `fk_session_participation_session` FOREIGN KEY (`session_id`) REFERENCES `session`(`id`)
 );
