@@ -2,15 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 @import url("https://fonts.googleapis.com/css2?family=Lato:wght@100;300;400;700;900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700;800;900&display=swap");
 
 $first-color: #8bc1f3;
-$second-color: #031926;
+$second-color: #07476d;
 
 body {
   margin: 0px;
   background-color: $second-color;
   color: $first-color;
-  font-family: "Lato", sans-serif;
+  font-family: "Montserrat", sans-serif;
 }
 
 .main {
